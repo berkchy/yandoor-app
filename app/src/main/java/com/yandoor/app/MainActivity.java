@@ -1,5 +1,7 @@
 import android.os.Bundle;
 import android.util.Log;
+import android.webkit.ConsoleMessage;
+import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
@@ -10,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
-    WebView webView;
+    private WebView webView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
             settings.setAllowFileAccess(true);
             settings.setAllowContentAccess(true);
             settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+            settings.setUseWideViewPort(true);
+            settings.setLoadWithOverviewMode(true);
 
             webView.setWebViewClient(new WebViewClient() {
                 @Override
@@ -34,6 +38,14 @@ public class MainActivity extends AppCompatActivity {
                     super.onReceivedError(view, request, error);
                     Toast.makeText(MainActivity.this, "WebView Error: " + error.getDescription(), Toast.LENGTH_LONG).show();
                     Log.e("CRASH_DEBUG", "WebView Error: ", new Exception(error.getDescription().toString()));
+                }
+            });
+
+            webView.setWebChromeClient(new WebChromeClient() {
+                @Override
+                public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
+                    Log.d("WEBVIEW_CONSOLE", consoleMessage.message() + " -- " + consoleMessage.sourceId() + ":" + consoleMessage.lineNumber());
+                    return true;
                 }
             });
 
