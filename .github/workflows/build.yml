@@ -44,7 +44,7 @@ jobs:
       # 6️⃣ Gradle build (signed)
       - name: Build Signed Release APK
         run: |
-          ./gradlew clean assembleRelease \
+          ./gradle clean assembleRelease \
           -Pandroid.injected.signing.store.file=$PWD/yandoor.jks \
           -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
           -Pandroid.injected.signing.key.alias=yandoor_key \
