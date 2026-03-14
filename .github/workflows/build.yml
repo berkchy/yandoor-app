@@ -1,35 +1,53 @@
-name: Build Android APK
+name: Build & Release Android APK
 
 on:
   workflow_dispatch:
   push:
-    branches: [ main ]
+    tags:
+      - 'v2.0.3'  # örn: v1.0.0
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Download repo
-        uses: actions/checkout@v4
+      # 1️⃣ Repo'yu checkout et
+      - uses: actions/checkout@v4
 
-      - name: Java setup
+      # 2️⃣ Java 17 kur
+      - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
 
-      - name: Install Gradle
+      # 3️⃣ Gradle kur
+      - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
 
-      - name: Install Android SDK
+      # 4️⃣ Android SDK kur
+      - name: Setup Android SDK
         uses: android-actions/setup-android@v3
-
-      - name: Gradle build
-        run: gradle clean assembleDebug
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
         with:
-          name: android-apk
-          path: app/build/outputs/apk/debug/app-debug.apk
+          api-level: 34
+          build-tools: 34.0.0
+
+      # 5️⃣ Release APK build
+      - name: Build Release APK
+        run: gradle clean assembleRelease
+
+      # 6️⃣ APK’yı Yandoor.apk olarak rename et
+      - name: Rename APK
+        run: |
+          mv app/build/outputs/apk/release/app-release.apk app/build/outputs/apk/release/Yandoor.apk
+
+      # 7️⃣ GitHub Release’e yükle
+      - name: Upload Release APK
+        uses: ncipollo/release-action@v1
+        with:
+          token: ${{ secrets.RELEASE_TOKEN }}  # repo secrets’ta oluştur
+          name: "Yandoor APK"
+          tag: ${{ github.ref_name }}
+          artifacts: app/build/outputs/apk/release/Yandoor.apk
+          draft: false
+          prerelease: false
