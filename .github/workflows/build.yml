@@ -2,9 +2,6 @@ name: Build & Release Android APK
 
 on:
   workflow_dispatch:
-  push:
-    tags:
-      - '*'  # örn: v1.0.0
 
 jobs:
   build:
