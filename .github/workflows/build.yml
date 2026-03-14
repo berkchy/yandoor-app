@@ -49,14 +49,28 @@ jobs:
       - name: Rename APK
         run: mv app/build/outputs/apk/release/app-release.apk app/build/outputs/apk/release/Yandoor.apk
 
-      # del exists release
       - name: Delete existing release
-        uses: dev-drprasad/delete-tag-and-release@v1
-        with:
-          delete_release: true
-          tag_name: ${{ github.ref_name }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG=${{ github.ref_name }}
+
+          echo "Checking release for tag: $TAG"
+
+          RELEASE_ID=$(curl -s \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            https://api.github.com/repos/${{ github.repository }}/releases/tags/$TAG \
+            | jq -r '.id')
+
+          if [ "$RELEASE_ID" != "null" ]; then
+            echo "Release exists. Deleting..."
+
+            curl -X DELETE \
+              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              https://api.github.com/repos/${{ github.repository }}/releases/$RELEASE_ID
+
+            git push --delete origin $TAG || true
+          else
+            echo "No existing release."
+          fi
 
       # draft new release
       - name: Upload Release APK
