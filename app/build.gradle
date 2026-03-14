@@ -4,9 +4,10 @@ plugins {
 
 android {
     compileSdk 34
+    namespace "com.yandoor.app"
 
     defaultConfig {
-        applicationId "com.yandior.app"
+        applicationId "com.yandoor.app"
         minSdk 21
         targetSdk 34
         versionCode 1
