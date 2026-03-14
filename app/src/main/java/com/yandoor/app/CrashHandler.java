@@ -3,7 +3,7 @@ import android.os.Looper;
 import android.widget.Toast;
 import android.util.Log;
 
-public class MyApplication extends Application {
+public class CrashHandler extends Application {
 
     @Override
     public void onCreate() {
