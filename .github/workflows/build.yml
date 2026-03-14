@@ -36,7 +36,7 @@ jobs:
         run: ls -l app/build/outputs/apk/release/
   
       - name: Rename APK
-        run: mv app/build/outputs/apk/release/app-debug.apk app/build/outputs/apk/release/Yandoor.apk
+        run: mv app/build/outputs/apk/release/app-release-unsigned.apk app/build/outputs/apk/release/Yandoor.apk
 
       - name: Upload Release APK
         uses: ncipollo/release-action@v1
