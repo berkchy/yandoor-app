@@ -32,16 +32,13 @@ jobs:
       - name: Build Release APK
         run: gradle clean assembleRelease
 
-      # 6️⃣ APK’yı Yandoor.apk olarak rename et
       - name: Rename APK
-        run: |
-          mv app/build/outputs/apk/release/app-release.apk app/build/outputs/apk/release/Yandoor.apk
+        run: mv app/build/outputs/apk/release/app-debug.apk app/build/outputs/apk/release/Yandoor.apk
 
-      # 7️⃣ GitHub Release’e yükle
       - name: Upload Release APK
         uses: ncipollo/release-action@v1
         with:
-          token: ${{ secrets.RELEASE_TOKEN }}  # repo secrets’ta oluştur
+          token: ${{ secrets.RELEASE_TOKEN }}
           name: "Yandoor APK"
           tag: ${{ github.ref_name }}
           artifacts: app/build/outputs/apk/release/Yandoor.apk
