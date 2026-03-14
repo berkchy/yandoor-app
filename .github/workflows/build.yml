@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     tags:
-      - 'v2.0.3'  # örn: v1.0.0
+      - '*'  # örn: v1.0.0
 
 jobs:
   build:
