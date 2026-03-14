@@ -31,7 +31,10 @@ jobs:
       # 5️⃣ Release APK build
       - name: Build Release APK
         run: gradle clean assembleRelease
-
+        
+      - name: List release folder
+        run: ls -l app/build/outputs/apk/release/
+  
       - name: Rename APK
         run: mv app/build/outputs/apk/release/app-debug.apk app/build/outputs/apk/release/Yandoor.apk
 
