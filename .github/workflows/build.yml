@@ -1,4 +1,4 @@
-name: Build & Release Android APK
+name: Build & Release Signed Android APK
 
 on: [push, pull_request]
 
@@ -28,16 +28,37 @@ jobs:
           api-level: 34
           build-tools: 34.0.0
 
-      # 5️⃣ Release APK build
-      - name: Build Release APK
-        run: gradle clean assembleRelease
-        
+      # 5️⃣ Keystore oluştur (keytool)
+      - name: Generate Keystore
+        run: |
+          keytool -genkey -v \
+          -keystore yandoor.jks \
+          -storepass ${{ secrets.KEYSTORE_PASSWORD }} \
+          -alias yandoor_key \
+          -keypass ${{ secrets.KEY_PASSWORD }} \
+          -keyalg RSA \
+          -keysize 2048 \
+          -validity 10000 \
+          -dname "CN=Yandoor, OU=App, O=Yandoor, L=City, S=State, C=TR"
+
+      # 6️⃣ Gradle build (signed)
+      - name: Build Signed Release APK
+        run: |
+          ./gradlew clean assembleRelease \
+          -Pandroid.injected.signing.store.file=$PWD/yandoor.jks \
+          -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
+          -Pandroid.injected.signing.key.alias=yandoor_key \
+          -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
+
+      # 7️⃣ Release klasörünü kontrol et
       - name: List release folder
         run: ls -l app/build/outputs/apk/release/
-  
-      - name: Rename APK
-        run: mv app/build/outputs/apk/release/app-release-unsigned.apk app/build/outputs/apk/release/Yandoor.apk
 
+      # 8️⃣ APK’yı Yandoor.apk olarak rename et
+      - name: Rename APK
+        run: mv app/build/outputs/apk/release/app-release.apk app/build/outputs/apk/release/Yandoor.apk
+
+      # 9️⃣ GitHub Release’e yükle
       - name: Upload Release APK
         uses: ncipollo/release-action@v1
         with:
