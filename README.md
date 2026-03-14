@@ -1,30 +1,25 @@
-# 🟣 Yandoor App
+# ✦ Yandoor App <img align="right" width="100" height="100" src="https://github.com/berkchy/yandoor-app/raw/main/app/src/main/res/mipmap/ic_launcher.png" alt="Yandoor Icon" style="border-radius:20%;"/>
 
-![Yandoor Icon](app/src/main/res/mipmap/ic_launcher.png)
-**Yandoor** — Anime resim sitesi `yandoor.vercel.app` için mobil mini uygulama.  
+## Features
 
----
-
-## 🚀 Özellikler
-
-- 🔞 **SFW / NSFW içerik desteği**  
-- 🎨 **Çoklu renk teması** (dark/light/custom)  
-- 📱 Back tuşu ile WebView navigasyonu  
-- 📦 **Hafif ve hızlı** Android uygulaması  
-- 🚀 GitHub Actions ile **otomatik Release APK üretimi**  
+- [NSFW/SFW] Content support  
+- [Theme] Multi-color themes (Dark / Light / Custom)  
+- [Navigation] Back button WebView navigation  
+- [Performance] Lightweight and fast Android app  
+- [CI/CD] Automated Release APK generation via GitHub Actions  
 
 ---
 
-## 🛠 Kurulum
+## Installation
 
-1. Repo’yu klonlayın:
+1. Clone the repository:
 
 ```bash
-git clone https://github.com/<kullanıcı_adın>/yandoor-app.git
+git clone https://github.com/berkchy/yandoor-app.git
 cd yandoor-app
 ```
 
-2. Gradle ile build:
+2. Build with Gradle:
 
 ```bash
 ./gradlew clean assembleRelease
@@ -32,20 +27,8 @@ cd yandoor-app
 
 ---
 
-⚙️ GitHub Actions
+GitHub Actions
 
-Release workflow hazır: Tag attığınızda otomatik olarak Yandoor.apk Release’e yüklenir
+The release workflow is ready. When you push a tag, Yandoor.apk is automatically uploaded to the Release section.
 
-Workflow dosyası: .github/workflows/build.yml
-
----
-
-📱 Ekran Görüntüleri
-
----
-
-💌 Lisans
-
-MIT License © 2026 
-
----
+Workflow file: .github/workflows/build.yml
