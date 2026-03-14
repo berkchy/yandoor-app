@@ -3,6 +3,7 @@
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
+        android:name=".CrashHandler"
         android:label="Yandoor App"
         android:icon="@mipmap/ic_launcher"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
