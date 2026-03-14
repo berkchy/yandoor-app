@@ -7,28 +7,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Repo'yu checkout et
       - uses: actions/checkout@v4
 
-      # 2️⃣ Java 17 kur
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
 
-      # 3️⃣ Gradle kur
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
 
-      # 4️⃣ Android SDK kur
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
         with:
           api-level: 34
           build-tools: 34.0.0
 
-      # 5️⃣ Keystore oluştur (keytool)
+      # keystore
       - name: Generate Keystore
         run: |
           keytool -genkey -v \
@@ -41,7 +37,7 @@ jobs:
           -validity 10000 \
           -dname "CN=Yandoor, OU=App, O=Yandoor, L=City, S=State, C=TR"
 
-      # 6️⃣ Gradle build (signed)
+      # build
       - name: Build Signed Release APK
         run: |
           gradle clean assembleRelease \
@@ -50,19 +46,23 @@ jobs:
           -Pandroid.injected.signing.key.alias=yandoor_key \
           -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
 
-      # 7️⃣ Release klasörünü kontrol et
-      - name: List release folder
-        run: ls -l app/build/outputs/apk/release/
-
-      # 8️⃣ APK’yı Yandoor.apk olarak rename et
       - name: Rename APK
         run: mv app/build/outputs/apk/release/app-release.apk app/build/outputs/apk/release/Yandoor.apk
 
-      # 9️⃣ GitHub Release’e yükle
+      # del exists release
+      - name: Delete existing release
+        uses: dev-drprasad/delete-tag-and-release@v1
+        with:
+          delete_release: true
+          tag_name: ${{ github.ref_name }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # draft new release
       - name: Upload Release APK
         uses: ncipollo/release-action@v1
         with:
-          token: ${{ secrets.RELEASE_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           name: "Yandoor APK"
           tag: ${{ github.ref_name }}
           artifacts: app/build/outputs/apk/release/Yandoor.apk
